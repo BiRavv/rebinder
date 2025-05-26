@@ -1,16 +1,18 @@
-const { app, BrowserWindow } = require('electron');
-
+const { app, BrowserWindow, Menu } = require('electron');
 let win;
 
 function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: './preload.js',
     },
   });
 //
+
+
   win.loadURL(`file://${__dirname}/index.html`);
 
   win.on('closed', () => {
@@ -31,3 +33,4 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
