@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron');
+const path = require('path');
 
 let win;
 
@@ -6,11 +7,16 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
+    frame: false,             // Remove title bar and window controls
+    resizable: false,         // Optional: prevent resizing
+    transparent: true,
+    autoHideMenuBar: true,    // Hide menu bar
+    hasShadow: false,         // Optional: remove shadow
     webPreferences: {
-      preload: './preload.js',
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
-//
+
   win.loadURL(`file://${__dirname}/index.html`);
 
   win.on('closed', () => {
