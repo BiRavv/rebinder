@@ -3,14 +3,17 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: rgba(30, 30, 30, 0.9); /* semi-transparent */
+    background-color: rgba(0, 0, 0, 0); /* semi-transparent */
     border-radius: 20px; /* Rounded corners */
     overflow: hidden;
+    border-radius: 50px;
   }
 
   #app {
     width: 100%;
     height: 100%;
+    background-color: black;
+    border-radius: 15px;
   }
 
   /* Example custom close button */
