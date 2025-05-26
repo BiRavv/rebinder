@@ -1,0 +1,20 @@
+{
+  "name": "rebinder",
+  "version": "1.0.0",
+  "description": "rebinds buttons",
+  "repository": {
+    "type": "git",
+    "url": "gitub.com/BiRavv/rebinder"
+  },
+  "license": "ISC",
+  "author": "BiRaw, Lali",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^36.3.1"
+  }
+}
