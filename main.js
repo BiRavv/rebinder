@@ -5,8 +5,8 @@ let win;
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 600,
+    height: 400,
     frame: false,             // Remove title bar and window controls
     resizable: false,         // Optional: prevent resizing
     transparent: true,
