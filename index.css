@@ -1,56 +1,60 @@
 @font-face {
-    font-family: "Silkscreen";
-    src: url(fonts/Silkscreen.ttf);
-  }
+  font-family: "Silkscreen";
+  src: url(fonts/Silkscreen.ttf);
+}
 
-html, body {
+#tester {
+  color: white;
+}
+
+button {
+  color: black;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0); /* semi-transparent */
+  border-radius: 20px; /* Rounded corners */
+  overflow: hidden;
+  border-radius: 30px;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  border-radius: 30px;
+
+  nav {
+    -webkit-app-region: drag;
+
+    padding: 20px;
+
     width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: rgba(0, 0, 0, 0); /* semi-transparent */
-    border-radius: 20px; /* Rounded corners */
-    overflow: hidden;
-    border-radius: 30px;
+    height: 20px;
+
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-color: gray;
   }
 
-  #app {    
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    border-radius: 30px;
+  #close-btn {
+    -webkit-app-region: no-drag;
 
-    nav{
-        -webkit-app-region: drag;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    height: 40px;
+    aspect-ratio: 1;
 
-        padding: 20px;
-
-        width: 100%;
-        height: 20px;
-
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-        background-color: gray;
-
-        
-    }
-      
-     #close-btn {
-        -webkit-app-region: no-drag;
-
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        height: 40px;
-        aspect-ratio: 1;
-
-        img{
-            width: 100%;
-            height: 100%;
-            fill: #ffffff;
-        }
+    img {
+      width: 100%;
+      height: 100%;
+      fill: #ffffff;
     }
   }
-
-
-
+}
