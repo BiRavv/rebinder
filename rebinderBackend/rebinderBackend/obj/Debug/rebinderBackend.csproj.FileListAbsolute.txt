@@ -1,6 +1,0 @@
-C:\Users\Peti\RiderProjects\rebinderBackend\rebinderBackend\bin\Debug\rebinderBackend.exe
-C:\Users\Peti\RiderProjects\rebinderBackend\rebinderBackend\bin\Debug\rebinderBackend.pdb
-C:\Users\Peti\RiderProjects\rebinderBackend\rebinderBackend\obj\Debug\rebinderBackend.csproj.AssemblyReference.cache
-C:\Users\Peti\RiderProjects\rebinderBackend\rebinderBackend\obj\Debug\rebinderBackend.csproj.CoreCompileInputs.cache
-C:\Users\Peti\RiderProjects\rebinderBackend\rebinderBackend\obj\Debug\rebinderBackend.exe
-C:\Users\Peti\RiderProjects\rebinderBackend\rebinderBackend\obj\Debug\rebinderBackend.pdb
