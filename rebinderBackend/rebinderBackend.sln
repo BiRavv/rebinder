@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rebinderBackend", "rebinderBackend\rebinderBackend.csproj", "{0CE0F835-8D0C-42A7-AD2A-A3DD2811A329}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0CE0F835-8D0C-42A7-AD2A-A3DD2811A329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CE0F835-8D0C-42A7-AD2A-A3DD2811A329}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CE0F835-8D0C-42A7-AD2A-A3DD2811A329}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CE0F835-8D0C-42A7-AD2A-A3DD2811A329}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
