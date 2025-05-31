@@ -7,7 +7,9 @@ function BackendAction(address, type) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("test-btn").addEventListener("click", () => {
-    BackendAction("scenario", "one");
-  });
+  document
+    .getElementById("add-scenario")
+    .addEventListener("click", AddScenario());
 });
+
+function AddScenario() {}
