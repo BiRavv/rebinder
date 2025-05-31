@@ -19,7 +19,7 @@ namespace rebinderBackend
             sc.AddBind(new StringMap(Keys.A, "test string 😎 "));
             sc.AddBind(new KeyMap(Keys.B, [Keys.C]));
             sc.AddBind(new KeyMap(Keys.I, [Keys.LWin, Keys.D]));
-            sc.SetActive(true);
+            //sc.SetActive(true);
             
             Application.Run();
         }

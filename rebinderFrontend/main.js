@@ -1,12 +1,13 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const path = require("path");
 
 let win;
+let tray;
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 600,
-    height: 400,
+    width: 700,
+    height: 450,
     frame: false, // Remove title bar and window controls
     resizable: false, // Optional: prevent resizing
     transparent: true,
@@ -25,6 +26,44 @@ function createWindow() {
   win.on("closed", () => {
     win = null;
   });
+
+  tray = new Tray(path.join(__dirname, "assets/icon.png"));
+  tray.setToolTip("rebinder");
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "Show",
+      click: () => {
+        win.show();
+      },
+    },
+    {
+      label: "Quit",
+      click: () => {
+        app.quit();
+      },
+    },
+  ]);
+
+  tray.setContextMenu(contextMenu);
+
+  tray.on("click", () => {
+    win.isVisible() ? win.hide() : win.show();
+  });
+
+  ipcMain.on("window-close", () => {
+    win.close();
+  });
+
+  ipcMain.on("window-minimize", () => {
+    win.minimize();
+  });
+
+  ipcMain.on("window-hide", () => {
+    win.hide(); // This hides the window (not quits)
+  });
+
+  tray.setImage(path.join(__dirname, "assets/icon.png"));
 }
 
 app.on("ready", createWindow);

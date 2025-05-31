@@ -1,0 +1,7 @@
+function SendAction(address, type) {
+  fetch("http://localhost:3102/", {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: `${address}@t${type}`,
+  });
+}

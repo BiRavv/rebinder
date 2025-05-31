@@ -3,17 +3,29 @@
   <head>
     <link rel="stylesheet" href="index.css" />
     <script src="test.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="/assets/icon.png" />
   </head>
   <body>
     <div id="app">
       <nav>
-        <div id="close-btn" onclick="window.close()">
+        <div class="menu-btn" onclick="window.api.windowClose()">
           <img src="assets/close.svg" alt="close app" />
         </div>
-        <!--Close button-->
+        <div class="menu-btn" onclick="window.api.windowMinimize()">
+          <img src="assets/dash.svg" alt="close app" />
+        </div>
+        <div class="menu-btn" onclick="window.api.windowHide()">
+          <img src="assets/down.svg" alt="close app" />
+        </div>
       </nav>
-      <button onclick="clicked()">1</button>
-      <button onclick="clickedf()">2</button>
+
+      <div id="main">
+        <div id="scenarios">
+          <div id="current-scenario"><span></span></div>
+          <div id="scenario-holder"></div>
+        </div>
+        <div id="binds"></div>
+      </div>
     </div>
   </body>
 </html>

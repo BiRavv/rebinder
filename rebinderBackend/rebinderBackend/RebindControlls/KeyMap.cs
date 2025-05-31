@@ -61,6 +61,7 @@ public class KeyMap : IBind
         return CallNextHookEx(hookId, nCode, wParam, lParam);
     }
     
+    // This is helper a method, helps press keys more low level.
     [DllImport("user32.dll", SetLastError = true)]
     private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
     private const int KEYEVENTF_KEYUP = 0x0002;
