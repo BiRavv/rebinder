@@ -10,6 +10,7 @@
   font-family: "Courier New", Courier, monospace;
   color: var(--primary);
   text-decoration: underline;
+  font-weight: 600;
 }
 
 html,
@@ -23,6 +24,23 @@ body {
   border-radius: var(--window_border_radious);
 
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.popup {
+  visibility: collapse;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 450px;
+  height: 200px;
+  padding: 10px;
+
+  background-color: var(--secondary);
+  border-radius: var(--window_border_radious);
+  border: var(--contrast) solid 5px;
 }
 
 #app {
@@ -46,7 +64,7 @@ body {
     border-top-right-radius: var(--window_border_radious);
     background-color: var(--secondary);
 
-    border-bottom: #2bff00 solid 5px;
+    border-bottom: var(--primary) solid 5px;
 
     .title {
       font-size: 40px;
@@ -119,6 +137,16 @@ body {
         width: 90%;
         height: 70%;
         background-color: transparent;
+
+        .scenario {
+          width: 90%;
+          height: 35px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+
+          background-color: var(--background);
+          border-radius: 10px;
+        }
       }
     }
     #binds {
