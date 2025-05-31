@@ -6,7 +6,7 @@ namespace rebinderBackend.FrontendConnection
     public static class LocalServer
     {
 
-        private static HttpListener LISTENER = new HttpListener();
+        private static HttpListener LISTENER = new();
 
         public static HttpListener getListener()
         {
