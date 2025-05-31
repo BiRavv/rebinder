@@ -45,9 +45,10 @@
         <Compile Include="FrontendConnection\LocalServer.cs" />
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="RebindControlls\Bind.cs" />
-        <Compile Include="RebindControlls\Remap.cs" />
+        <Compile Include="RebindControlls\IBind.cs" />
+        <Compile Include="RebindControlls\KeyMap.cs" />
         <Compile Include="RebindControlls\Scenario.cs" />
+        <Compile Include="RebindControlls\StringMap.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -17,8 +17,8 @@ namespace rebinderBackend
             Fetch.Listen("bind", "ab", () =>
             {
                 Console.WriteLine("AB");
-                Remap remap = new Remap(Keys.A, Keys.B);
-                remap.Start();
+                KeyMap keyMap = new KeyMap(Keys.A, Keys.B);
+                keyMap.Start();
 
                 return 0;
             });
@@ -26,8 +26,8 @@ namespace rebinderBackend
             Fetch.Listen("bind", "vf", () =>
             {
                 Console.WriteLine("VF");
-                Remap remap = new Remap(Keys.V, Keys.F);
-                remap.Start();
+                KeyMap keyMap = new KeyMap(Keys.V, Keys.F);
+                keyMap.Start();
 
                 return 0;
             });

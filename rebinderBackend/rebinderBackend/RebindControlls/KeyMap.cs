@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using rebinderBackend.RebindControls;
 
-public class Remap : Bind
+public class KeyMap : IBind
 {
     private readonly Keys fromKey;
     private readonly string toKeyChar;
@@ -15,7 +15,7 @@ public class Remap : Bind
     private const int WH_KEYBOARD_LL = 13;
     private const int WM_KEYDOWN = 0x0100;
 
-    public Remap(Keys fromKey, Keys toKey)
+    public KeyMap(Keys fromKey, Keys toKey)
     {
         this.fromKey = fromKey;
         this.toKeyChar = toKey.ToString().ToLower();
