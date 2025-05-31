@@ -12,7 +12,7 @@ function clicked() {
   fetch("http://localhost:3102/", {
     method: "POST",
     headers: { "Content-Type": "text/plain" },
-    body: "bind@ab",
+    body: "scenario@one",
   });
 }
 

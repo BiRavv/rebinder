@@ -41,24 +41,36 @@ namespace rebinderBackend.RebindControls
             _binds.RemoveAt(index);
         }
 
+        public void SetActive(bool sate)
+        {
+            IsActive = sate;
+            foreach (IBind bind in _binds)
+            {
+                if (IsActive) bind.Start();
+                else bind.Stop();
+            }
+        }
+        
         /// <summary>
-        /// Creates a scenario. A scenario holds many _binds, and controls them. The listener will listen for "scenario@[Name of this scenario]"
+        /// Creates a scenario. A scenario holds many binds, and controls them. The listener will listen for "scenario@[Name of this scenario]"
         /// </summary>
-        /// <param name="name">The name of the scenario. It will be validated, so it's not sure that it will be exactly that</param>
+        /// <param name="name">The name of the scenario. It will be validated, so it's not sure that it will be exactly the arg. 'Name' variable is public to get.</param>
         public Scenario(string name)
         {
             Name = ValidateName(name);
             Fetch.Listen("scenario", Name, () =>
             {
+                Console.WriteLine("fasz");
                 IsActive = !IsActive;
                 foreach (IBind bind in _binds)
                 {
+                    Console.WriteLine("fasz1");
                     if (IsActive) bind.Start();
                     else bind.Stop();
                 }
                 
                 return 0; // Returns any
             });
-    }
+        }
     }
 }

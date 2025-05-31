@@ -9,30 +9,31 @@ namespace rebinderBackend
 {
     internal class Program
     {
+        [STAThread]
         public static void Main(string[] args)
         {
-            
-            Console.WriteLine("Remapping A → D. Press Ctrl+C to exit.");
-            
-            Fetch.Listen("bind", "ab", () =>
-            {
-                Console.WriteLine("AB");
-                KeyMap keyMap = new KeyMap(Keys.A, Keys.B);
-                keyMap.Start();
 
-                return 0;
-            });
+            // Capture the main thread context. Do not even ask!
+            CaptureMain();
             
-            Fetch.Listen("bind", "vf", () =>
-            {
-                Console.WriteLine("VF");
-                KeyMap keyMap = new KeyMap(Keys.V, Keys.F);
-                keyMap.Start();
-
-                return 0;
-            });
+            Scenario sc = new Scenario("one");
+            sc.AddBind(new StringMap(Keys.A, "fasza "));
+            sc.AddBind(new KeyMap(Keys.B, Keys.C));
+            
+            //sc.SetActive(true);
             
             Application.Run();
+        }
+
+        public static void CaptureMain()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            // Force the installation of WinForms synchronization context
+            var context = new WindowsFormsSynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(context);
+            Fetch.Init(context);
         }
     }
 }

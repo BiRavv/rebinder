@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace rebinderBackend.FrontendConnection
@@ -38,13 +39,29 @@ namespace rebinderBackend.FrontendConnection
                     context.Response.StatusCode = 200;
                     context.Response.Close();
 
+                    Console.WriteLine("listened");
                     if (body == $"{address}@{type}")
                     {
-                        Console.WriteLine("Listening...");
-                        action();
+                        if (_mainContext != null)
+                        {
+                            Console.WriteLine("loly");
+                            _mainContext.Post(_ => action(), null);
+                        }
+                        else
+                        {
+                            throw new Exception("No thread context available");
+                        }
                     }
                 }
             });
         }
+        
+        // This if for the action() to run on main thread
+        private static SynchronizationContext? _mainContext;
+        public static void Init(SynchronizationContext context)
+        {
+            _mainContext = context;
+        }
+
     }
 }

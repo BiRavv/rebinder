@@ -28,7 +28,6 @@
         {
             if (hookId != IntPtr.Zero) return;
             hookId = SetHook(proc);
-            Application.Run();
         }
 
         public void Stop()
