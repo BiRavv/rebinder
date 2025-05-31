@@ -12,18 +12,19 @@ namespace rebinderBackend
         [STAThread]
         public static void Main(string[] args)
         {
-
             // Capture the main thread context. Do not even ask!
             CaptureMain();
             
             Scenario sc = new Scenario("one");
             sc.AddBind(new StringMap(Keys.A, "test string 😎 "));
-            sc.AddBind(new KeyMap(Keys.B, Keys.C));
+            sc.AddBind(new KeyMap(Keys.B, [Keys.C]));
+            sc.AddBind(new KeyMap(Keys.I, [Keys.LWin, Keys.D]));
+            sc.SetActive(true);
             
             Application.Run();
         }
 
-        public static void CaptureMain()
+        private static void CaptureMain()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

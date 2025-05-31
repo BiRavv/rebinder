@@ -7,7 +7,7 @@ using rebinderBackend.RebindControls;
 public class KeyMap : IBind
 {
     private readonly Keys fromKey;
-    private readonly string toKeyChar;
+    private readonly Keys[] toKeys;
     private IntPtr hookId = IntPtr.Zero;
     private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
     private LowLevelKeyboardProc proc;
@@ -15,10 +15,10 @@ public class KeyMap : IBind
     private const int WH_KEYBOARD_LL = 13;
     private const int WM_KEYDOWN = 0x0100;
 
-    public KeyMap(Keys fromKey, Keys toKey)
+    public KeyMap(Keys fromKey, Keys[] toKeys)
     {
         this.fromKey = fromKey;
-        this.toKeyChar = toKey.ToString().ToLower();
+        this.toKeys = toKeys;
         this.proc = HookCallback;
     }
 
@@ -54,12 +54,34 @@ public class KeyMap : IBind
             int vkCode = Marshal.ReadInt32(lParam);
             if ((Keys)vkCode == fromKey)
             {
-                SendKeys.SendWait(toKeyChar);
+                SendVirtualKeys(toKeys);
                 return (IntPtr)1; // Block original key
             }
         }
         return CallNextHookEx(hookId, nCode, wParam, lParam);
     }
+    
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+    private const int KEYEVENTF_KEYUP = 0x0002;
+    private void SendVirtualKeys(Keys[] keys)
+    {
+        foreach (Keys key in keys)
+        {
+            byte vk = (byte)key;
+            keybd_event(vk, 0, 0, 0); // Key down
+        }
+        foreach (Keys key in keys)
+        {
+            byte vk = (byte)key;
+            keybd_event(vk, 0, KEYEVENTF_KEYUP, 0); // Key up
+        }
+
+        
+        
+    }
+
+
 
     // P/Invoke
     [DllImport("user32.dll")]
