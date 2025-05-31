@@ -60,11 +60,9 @@ namespace rebinderBackend.RebindControls
             Name = ValidateName(name);
             Fetch.Listen("scenario", Name, () =>
             {
-                Console.WriteLine("fasz");
                 IsActive = !IsActive;
                 foreach (IBind bind in _binds)
                 {
-                    Console.WriteLine("fasz1");
                     if (IsActive) bind.Start();
                     else bind.Stop();
                 }

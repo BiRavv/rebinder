@@ -38,13 +38,11 @@ namespace rebinderBackend.FrontendConnection
                     string body = new StreamReader(context.Request.InputStream).ReadToEnd().Trim();
                     context.Response.StatusCode = 200;
                     context.Response.Close();
-
-                    Console.WriteLine("listened");
+                    
                     if (body == $"{address}@{type}")
                     {
                         if (_mainContext != null)
                         {
-                            Console.WriteLine("loly");
                             _mainContext.Post(_ => action(), null);
                         }
                         else

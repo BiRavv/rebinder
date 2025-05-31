@@ -17,10 +17,8 @@ namespace rebinderBackend
             CaptureMain();
             
             Scenario sc = new Scenario("one");
-            sc.AddBind(new StringMap(Keys.A, "fasza "));
+            sc.AddBind(new StringMap(Keys.A, "test string 😎 "));
             sc.AddBind(new KeyMap(Keys.B, Keys.C));
-            
-            //sc.SetActive(true);
             
             Application.Run();
         }
