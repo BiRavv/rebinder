@@ -4,6 +4,7 @@ const scenarioHolder = document.getElementById("scenario-holder");
 const scenarioPopup = document.getElementById("add-scenario-popup");
 const currentScenarioName = document.getElementById("current-scenario-name");
 const currentScenarioButton = document.getElementById("current-scenario-btn");
+const bindHolder = document.getElementById("binds");
 
 let startingScenarios = [];
 function getAllScenarios() {
@@ -23,11 +24,10 @@ function getAllScenarios() {
         sc.innerText = name;
         sc.addEventListener("click", () => selectScenario(sc));
         scenarioHolder.appendChild(sc);
-
-        if (scenarioHolder.firstChild != null) {
-          scenarioHolder.firstChild.classList.add("selected");
-        }
       });
+      if (scenarioHolder.firstChild != null) {
+        selectScenario(scenarioHolder.children[1]);
+      }
     });
 }
 
@@ -110,4 +110,46 @@ function selectScenario(scenario) {
 
   const startSrc = new URL("assets/start.svg", window.location.href).href;
   currentScenarioButton.src = startSrc;
+
+  bindHolder.childNodes.forEach((bind) => {
+    if (bind.id == "add-bind") return;
+    bind.remove();
+  });
+
+  fetch("http://localhost:3102/", {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: `scenario_binds@${currentScenarioName.innerText}`,
+  })
+    .then((res) => res.text())
+    .then((response) => {
+      response.split("/").forEach((line) => {
+        console.log("line" + line);
+        switch (line.split("&")[0]) {
+          case "1":
+            AddKeyMap(line);
+            break;
+          case "0":
+            AddStringMap(line);
+          default:
+            return;
+        }
+      });
+    });
+}
+
+function AddKeyMap(line) {
+  let map = document.createElement("div");
+  map.classList.add("bind");
+  bindHolder.appendChild(map);
+
+  map.innerText = line + " key";
+}
+
+function AddStringMap(line) {
+  let map = document.createElement("div");
+  map.classList.add("bind");
+  bindHolder.appendChild(map);
+
+  map.innerText = line + " str";
 }

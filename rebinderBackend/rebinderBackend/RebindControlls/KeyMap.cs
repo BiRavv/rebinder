@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using rebinderBackend.RebindControls;
@@ -35,6 +36,11 @@ public class KeyMap : IBind
         hookId = IntPtr.Zero;
     }
 
+    public string ToFrontendData()
+    {
+        return "0&"+ (int)fromKey +">"+String.Join(";", toKeys);
+    }
+    
     private IntPtr SetHook(LowLevelKeyboardProc proc)
     {
         using (Process curProcess = Process.GetCurrentProcess())
@@ -77,9 +83,6 @@ public class KeyMap : IBind
             byte vk = (byte)key;
             keybd_event(vk, 0, KEYEVENTF_KEYUP, 0); // Key up
         }
-
-        
-        
     }
 
 

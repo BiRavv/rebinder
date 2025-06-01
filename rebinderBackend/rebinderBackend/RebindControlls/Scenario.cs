@@ -90,6 +90,21 @@ namespace rebinderBackend.RebindControls
                 
                 return null; // Returns any
             });
+            // Gives back all the binds the scenario has
+            Fetch.AddListener(body =>
+            {
+                if (body != $"scenario_binds@{Name}") return null;
+
+                Console.WriteLine(body);
+                
+                string responseBinds = "";
+                for (int i = 0; i < _binds.Count; i++)
+                {
+                    responseBinds += i + "&" + _binds[i].ToFrontendData() + "/";
+                }
+                
+                return responseBinds;
+            });
         }
     }
 }

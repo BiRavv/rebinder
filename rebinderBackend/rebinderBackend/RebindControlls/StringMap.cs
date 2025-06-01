@@ -37,6 +37,11 @@
             hookId = IntPtr.Zero;
         }
 
+        public string ToFrontendData()
+        {
+            return "1&"+ (int)fromKey +">"+textToPaste;
+        }
+        
         private IntPtr SetHook(LowLevelKeyboardProc proc)
         {
             using (Process curProcess = Process.GetCurrentProcess())

@@ -4,5 +4,6 @@
     {
         void Start();
         void Stop();
+        string ToFrontendData();
     }
 }
