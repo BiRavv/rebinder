@@ -244,24 +244,26 @@ body {
     #binds {
       width: 70%;
       background-color: var(--background);
-      max-height: 80%;
-      height: fit-content;
+      height: 80vh; /* <- fixed height instead of fit-content */
       padding: 10px;
+      overflow-y: auto;
 
       display: flex;
-      flex-direction: column-reverse;
-      align-items: center;
+      flex-direction: column;
+      align-items: stretch;
 
       .bind {
+        flex-shrink: 0;
         width: 95%;
         height: 50px;
         background-color: var(--secondary);
         margin-bottom: 5px;
-
         border-radius: 15px;
       }
+
       #add-bind {
         display: flex;
+        flex-direction: row-reverse;
         align-items: center;
         justify-content: center;
         img {
