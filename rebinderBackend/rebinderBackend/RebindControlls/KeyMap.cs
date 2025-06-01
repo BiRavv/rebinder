@@ -9,7 +9,7 @@ using rebinderBackend.RebindControls;
 public class KeyMap : IBind
 {
     public Keys fromKey;
-    public Keys[] toKeys;
+    public List<Keys> toKeys;
     private IntPtr hookId = IntPtr.Zero;
     private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
     private LowLevelKeyboardProc proc;
@@ -17,7 +17,7 @@ public class KeyMap : IBind
     private const int WH_KEYBOARD_LL = 13;
     private const int WM_KEYDOWN = 0x0100;
 
-    public KeyMap(Keys fromKey, Keys[] toKeys)
+    public KeyMap(Keys fromKey, List<Keys> toKeys)
     {
         this.fromKey = fromKey;
         this.toKeys = toKeys;
@@ -77,7 +77,7 @@ public class KeyMap : IBind
     [DllImport("user32.dll", SetLastError = true)]
     private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
     private const int KEYEVENTF_KEYUP = 0x0002;
-    private void SendVirtualKeys(Keys[] keys)
+    private void SendVirtualKeys(List<Keys> keys)
     {
         foreach (Keys key in keys)
         {

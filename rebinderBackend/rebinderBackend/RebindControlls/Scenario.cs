@@ -114,25 +114,51 @@ namespace rebinderBackend.RebindControls
 
                 string toChange = body.Split(new[] { '@' })[2];
 
-                IBind bind = _binds[Int32.Parse(toChange.Split('&')[0])];
+                try
+                {
+                    IBind bind = _binds[Int32.Parse(toChange.Split('&')[0])];
 
 
-                if (toChange.Split('&')[1] == "1")
-                {
-                    StringMap stringMap = (StringMap)bind;
-                    stringMap.fromKey = (Keys)Int64.Parse(toChange.Split('&')[2].Split('>')[0]);
-                    stringMap.textToPaste = toChange.Split('&')[2].Split('>')[1];
-                }
-                else if (toChange.Split('&')[1] == "0")
-                {
-                    KeyMap stringMap = (KeyMap)bind;
-                    stringMap.fromKey = (Keys)Int64.Parse(toChange.Split('&')[2].Split('>')[0]);
-                    stringMap.toKeys = new Keys[] { };
-                    foreach (string keyString in toChange.Split('&')[2].Split('>')[1].Split(';'))
+                    if (toChange.Split('&')[1] == "1")
                     {
-                        if (keyString == "" || keyString == null) continue;
-                        stringMap.toKeys.Append((Keys)Int64.Parse(keyString));
+                        StringMap stringMap = (StringMap) bind;
+                        stringMap.fromKey = (Keys)Int64.Parse(toChange.Split('&')[2].Split('>')[0]);
+                        stringMap.textToPaste = toChange.Split('&')[2].Split('>')[1];
                     }
+                    else if (toChange.Split('&')[1] == "0")
+                    {
+                        KeyMap keyMap = (KeyMap)bind;
+                        keyMap.fromKey = (Keys)Int64.Parse(toChange.Split('&')[2].Split('>')[0]);
+                        keyMap.toKeys = new List<Keys>();
+                        foreach (string keyString in toChange.Split('&')[2].Split('>')[1].Split(';'))
+                        {
+                            if (keyString == "" || keyString == null) continue;
+                            Console.WriteLine((Keys)Int64.Parse(keyString));
+                            keyMap.toKeys.Add(((Keys)Int64.Parse(keyString))); ;
+                            Console.WriteLine(keyMap.toKeys.Count);
+                        }
+                        _binds[Int32.Parse(toChange.Split('&')[0])] = keyMap;
+                        Console.WriteLine("keys : "+toChange.Split('&')[2].Split('>')[1]);
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    if (toChange.Split('&')[1] == "1")
+                    {
+                        
+                        Keys fromKey = (Keys)Int64.Parse(toChange.Split('&')[2].Split('>')[0]);
+                        string textToPaste = toChange.Split('&')[2].Split('>')[1];
+                        AddBind(new StringMap(fromKey, textToPaste));
+                        Console.WriteLine(_binds.Count);
+                    }
+                    else if (toChange.Split('&')[1] == "0")
+                    {
+                       
+                        Keys fromKey = (Keys)Int64.Parse(toChange.Split('&')[2].Split('>')[0]);
+                        AddBind(new KeyMap(fromKey, new List<Keys>() { }));
+                    }
+
                 }
 
                 return null;

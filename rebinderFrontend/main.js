@@ -23,7 +23,7 @@ function createWindow() {
 
   win.loadFile("index.html"); // More robust than loadURL with file://
 
-  win.webContents.openDevTools(); // Show DevTools on launch
+  win.webContents.openDevTools(); // Show DevTools on launch*/
 
   win.removeMenu();
 
