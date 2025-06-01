@@ -66,7 +66,7 @@ function StartCurrentScenario() {
 }
 
 function AddScenarioDone() {
-  if (newScenarioName.value.length < 3) {
+  if (newScenarioName.value.length < 2 || newScenarioName.value.length > 7) {
     newScenarioWarning.style.visibility = "visible";
     return;
   }

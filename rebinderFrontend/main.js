@@ -13,6 +13,7 @@ function createWindow() {
     transparent: true,
     autoHideMenuBar: true,
     hasShadow: false,
+    icon: path.join(__dirname, "assets", "icon.png"), // <- ide kerül az ikon
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,

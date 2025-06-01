@@ -160,6 +160,12 @@ body {
         box-sizing: border-box;
         font-size: 25px;
 
+        #current-scenario-name {
+          font-weight: 600;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
         img {
           height: 95%;
           aspect-ratio: 1;
@@ -196,10 +202,19 @@ body {
           height: 35px;
           margin-top: 10px;
           margin-bottom: 10px;
+          padding: 5px;
 
           background-color: var(--background);
           border-radius: 10px;
           border: transparent solid 3px;
+          box-sizing: border-box;
+
+          display: flex;
+          font-size: 20px;
+          align-items: center;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          text-wrap-mode: nowrap;
         }
         .selected {
           border: 3px solid var(--primary);
