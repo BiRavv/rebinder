@@ -54,6 +54,30 @@
               <img src="assets/add.svg" alt="add scenario" />
             </div>
           </div>
+          <div id="settings-panel" class="hidden">
+            <div class="color-box box1" data-var="--primary"></div>
+            <div class="color-box box2" data-var="--secondary"></div>
+            <div class="color-box box3" data-var="--background"></div>
+            <div class="color-box box4" data-var="--contrast"></div>
+
+            <div class="sliders">
+              <div class="slider-group">
+                <input type="range" id="rSlider" min="0" max="255">
+              </div>
+              <div class="slider-group">
+                <input type="range" id="gSlider" min="0" max="255">
+              </div>
+              <div class="slider-group">
+                <input type="range" id="bSlider" min="0" max="255">
+              </div>
+            </div>
+            <div id="reset-colors">
+              <p>Reset Colors</p>
+            </div>
+          </div>
+          <div id="settings-button">
+            <img src="assets/settings.png" onclick="settingsClick()">
+          </div>
         </div>
         <div id="binds">
           <div class="bind" id="add-bind">
@@ -62,5 +86,82 @@
         </div>
       </div>
     </div>
+    <script>
+      let settingsVisible = false;
+
+      function settingsClick() {
+        const panel = document.getElementById('settings-panel');
+        settingsVisible = !settingsVisible;
+        panel.classList.toggle('hidden', !settingsVisible);
+      }
+
+      document.getElementById('settings-icon').addEventListener('click', settingButton);
+    </script>
+    <script>
+      const sliders = {
+        r: document.getElementById('rSlider'),
+        g: document.getElementById('gSlider'),
+        b: document.getElementById('bSlider')
+      };
+
+      let selectedVar = '--primary'; // alapértelmezett
+
+      // Kattintás a színnégyzetre
+      document.querySelectorAll('.color-box').forEach(box => {
+        box.addEventListener('click', () => {
+          selectedVar = box.dataset.var;
+
+          const color = getComputedStyle(box).backgroundColor; // pl. rgb(255, 0, 0)
+          const [r, g, b] = color.match(/\d+/g);
+
+          sliders.r.value = r;
+          sliders.g.value = g;
+          sliders.b.value = b;
+
+          updateRootColor(); // azonnali frissítés
+        });
+      });
+
+      // Slider frissíti a kiválasztott root változót
+      Object.values(sliders).forEach(slider => {
+        slider.addEventListener('input', updateRootColor);
+      });
+
+      function updateRootColor() {
+        const r = sliders.r.value;
+        const g = sliders.g.value;
+        const b = sliders.b.value;
+        const rgb = `rgb(${r}, ${g}, ${b})`;
+
+        document.documentElement.style.setProperty(selectedVar, rgb);
+      }
+    </script>
+    <script>
+      const defaultColors = {
+        '--primary': 'rgb(43, 255, 0)',       // piros példa
+        '--secondary': 'rgb(83, 83, 83)',     // zöld példa
+        '--background': 'rgb(62, 62, 62)',// fehér példa
+        '--contrast': 'rgb(255, 255, 255)'         // fekete példa
+      };
+
+      // A reset gomb kiválasztása
+      const resetBtn = document.getElementById('reset-colors');
+
+      resetBtn.addEventListener('click', () => {
+        // Visszaállítjuk az összes root változót
+        for (const [varName, color] of Object.entries(defaultColors)) {
+          document.documentElement.style.setProperty(varName, color);
+        }
+
+        // Ha az aktuális selectedVar benne van a defaultColors-ban, frissítsük a slider értékeket is:
+        if (defaultColors[selectedVar]) {
+          const color = defaultColors[selectedVar];
+          const [r, g, b] = color.match(/\d+/g);
+          sliders.r.value = r;
+          sliders.g.value = g;
+          sliders.b.value = b;
+        }
+      });
+    </script>
   </body>
 </html>

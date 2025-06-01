@@ -193,7 +193,7 @@ body {
       #scenario-holder {
         margin-top: 8px;
         width: 90%;
-        height: 70%;
+        height: 60%;
         background-color: transparent;
         overflow-y: scroll;
 
@@ -224,6 +224,23 @@ body {
         }
       }
     }
+    #settings-panel{
+      position: fixed;
+      margin-top: 55px;
+      width: 204px;
+      height: 275px;
+      background-color: var(--primary);
+    }
+    #settings-button{
+      img{
+      margin-top: 8px;
+      height: 40px;
+      }
+      img:hover{
+        cursor: pointer;
+      }
+      
+    }
     #binds {
       width: 70%;
       background-color: var(--background);
@@ -253,5 +270,100 @@ body {
         }
       }
     }
+  }
+}
+
+.hidden{
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.color-box {
+  border-radius: 5px;
+  width: 30px;
+  height: 20px;
+  margin-bottom: 10px;
+  border: 4px solid white;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.selected {
+  border-color: black !important;
+}
+
+.box1 { background-color: var(--primary); }
+.box2 { background-color: var(--secondary); }
+.box3 { background-color: var(--background); }
+.box4 { background-color: var(--contrast); }
+
+.sliders {
+  transform: translate(80px, -170px);
+  background-color: black;
+  border-radius: 5px;
+  margin-top: 30px;
+  height: 165px;
+  width: 100px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+}
+
+.slider-group {
+  transform: translate(0px, -5px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.slider-group:first-child{
+  margin-left: 9px;
+  background: red;
+}
+
+.slider-group:nth-child(2){
+  background: greenyellow;
+}
+
+.slider-group:last-child{
+  background: blue;
+}
+
+input[type="range"] {
+  writing-mode: bt-lr; /* vertikális csúszka */
+  -webkit-appearance: slider-vertical; /* szükséges WebKit-alapú böngészőkben */
+  width: 10px;
+  height: 150px;
+}
+
+#reset-colors{
+  display: flex;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 30px;
+  width: 105px;
+  box-sizing: border-box;
+  background-color: black;
+  color: white;
+  transform: translate(50px, -110px);
+  justify-content: center;
+  p{
+    transform: translate(0px, -10px);
+    cursor: pointer;
   }
 }
