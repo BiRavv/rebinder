@@ -111,9 +111,10 @@ function selectScenario(scenario) {
   const startSrc = new URL("assets/start.svg", window.location.href).href;
   currentScenarioButton.src = startSrc;
 
-  bindHolder.childNodes.forEach((bind) => {
-    if (bind.id == "add-bind") return;
-    bind.remove();
+  Array.from(bindHolder.children).forEach((child) => {
+    if (child.id !== "add-bind") {
+      child.remove();
+    }
   });
 
   fetch("http://localhost:3102/", {
@@ -124,13 +125,15 @@ function selectScenario(scenario) {
     .then((res) => res.text())
     .then((response) => {
       response.split("/").forEach((line) => {
+        if (line == null || line == "") return;
         console.log("line" + line);
         switch (line.split("&")[0]) {
+          case "0":
+            AddStringMap(line);
+            break;
           case "1":
             AddKeyMap(line);
             break;
-          case "0":
-            AddStringMap(line);
           default:
             return;
         }
