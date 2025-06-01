@@ -47,10 +47,11 @@ namespace rebinderBackend.FrontendConnection
                     }
 
                     string responseText = null;
-
+                    Console.WriteLine(body);
                     // Use a ManualResetEventSlim to wait for the main context thread to run the listener and get the result
                     using (var waitHandle = new ManualResetEventSlim(false))
                     {
+                        
                         _mainContext.Post(_ =>
                         {
                             foreach (var listener in Listeners)

@@ -8,8 +8,8 @@
     
     public class StringMap : IBind
     {
-          private readonly Keys fromKey;
-        private readonly string textToPaste;
+        public Keys fromKey;
+        public string textToPaste;
         private IntPtr hookId = IntPtr.Zero;
         private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
         private LowLevelKeyboardProc proc;

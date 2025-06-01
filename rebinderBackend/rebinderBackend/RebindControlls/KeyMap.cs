@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,8 +8,8 @@ using rebinderBackend.RebindControls;
 
 public class KeyMap : IBind
 {
-    private readonly Keys fromKey;
-    private readonly Keys[] toKeys;
+    public Keys fromKey;
+    public List<Keys> toKeys;
     private IntPtr hookId = IntPtr.Zero;
     private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
     private LowLevelKeyboardProc proc;
@@ -16,7 +17,7 @@ public class KeyMap : IBind
     private const int WH_KEYBOARD_LL = 13;
     private const int WM_KEYDOWN = 0x0100;
 
-    public KeyMap(Keys fromKey, Keys[] toKeys)
+    public KeyMap(Keys fromKey, List<Keys> toKeys)
     {
         this.fromKey = fromKey;
         this.toKeys = toKeys;
@@ -38,7 +39,12 @@ public class KeyMap : IBind
 
     public string ToFrontendData()
     {
-        return "0&"+ (int)fromKey +">"+String.Join(";", toKeys);
+        List<int> toKeysCode = new List<int>();
+        foreach (Keys key in toKeys)
+        {
+            toKeysCode.Add((int)key);
+        }
+        return "0&"+ (int)fromKey +">"+String.Join(";", toKeysCode);
     }
     
     private IntPtr SetHook(LowLevelKeyboardProc proc)
@@ -71,7 +77,7 @@ public class KeyMap : IBind
     [DllImport("user32.dll", SetLastError = true)]
     private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
     private const int KEYEVENTF_KEYUP = 0x0002;
-    private void SendVirtualKeys(Keys[] keys)
+    private void SendVirtualKeys(List<Keys> keys)
     {
         foreach (Keys key in keys)
         {

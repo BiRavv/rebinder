@@ -6,7 +6,6 @@ const currentScenarioName = document.getElementById("current-scenario-name");
 const currentScenarioButton = document.getElementById("current-scenario-btn");
 const bindHolder = document.getElementById("binds");
 
-let startingScenarios = [];
 function getAllScenarios() {
   fetch("http://localhost:3102/", {
     method: "POST",
@@ -15,18 +14,16 @@ function getAllScenarios() {
   })
     .then((res) => res.text())
     .then((response) => {
-      console.log(response);
       response.split(";").forEach((name) => {
-        if (name == "" || name == null) return;
-
-        let sc = document.createElement("div");
+        if (!name) return;
+        const sc = document.createElement("div");
         sc.classList.add("scenario");
         sc.innerText = name;
         sc.addEventListener("click", () => selectScenario(sc));
         scenarioHolder.appendChild(sc);
       });
-      if (scenarioHolder.firstChild != null) {
-        selectScenario(scenarioHolder.children[1]);
+      if (scenarioHolder.children.length > 0) {
+        selectScenario(scenarioHolder.children[0]);
       }
     });
 }
@@ -41,6 +38,11 @@ window.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("current-scenario-btn")
     .addEventListener("click", StartCurrentScenario);
+  document
+    .getElementById("add-bind-btn")
+    .addEventListener("click", () =>
+      AddBind(document.getElementById("add-bind-listen"))
+    );
   getAllScenarios();
 });
 
@@ -57,38 +59,30 @@ function StartCurrentScenario() {
 
   const pauseSrc = new URL("assets/pause.svg", window.location.href).href;
   const startSrc = new URL("assets/start.svg", window.location.href).href;
-
-  if (currentScenarioButton.src !== pauseSrc) {
-    currentScenarioButton.src = pauseSrc;
-  } else {
-    currentScenarioButton.src = startSrc;
-  }
+  currentScenarioButton.src =
+    currentScenarioButton.src === pauseSrc ? startSrc : pauseSrc;
 }
 
 function AddScenarioDone() {
-  if (newScenarioName.value.length < 2 || newScenarioName.value.length > 7) {
+  const name = newScenarioName.value;
+  if (name.length < 2 || name.length > 7) {
     newScenarioWarning.style.visibility = "visible";
     return;
   }
 
-  let finalName = newScenarioName.value;
   fetch("http://localhost:3102/", {
     method: "POST",
     headers: { "Content-Type": "text/plain" },
-    body: `add_scenario@${newScenarioName.value}`,
+    body: `add_scenario@${name}`,
   })
     .then((res) => res.text())
     .then((response) => {
-      finalName = response.split("@")[1];
-      console.log(finalName);
-    })
-    .then(() => {
-      let sc = document.createElement("div");
+      const finalName = response.split("@")[1];
+      const sc = document.createElement("div");
       sc.classList.add("scenario");
       sc.innerText = finalName;
       sc.addEventListener("click", () => selectScenario(sc));
       scenarioHolder.appendChild(sc);
-
       scenarioPopup.style.visibility = "collapse";
       newScenarioWarning.style.visibility = "hidden";
       newScenarioName.value = "";
@@ -102,19 +96,18 @@ function selectScenario(scenario) {
     body: `stop_scenario@${currentScenarioName.innerText}`,
   });
 
-  for (let i = 0; i < scenarioHolder.children.length; i++) {
-    scenarioHolder.children[i].classList.remove("selected");
-  }
+  [...scenarioHolder.children].forEach((child) =>
+    child.classList.remove("selected")
+  );
   scenario.classList.add("selected");
   currentScenarioName.innerText = scenario.innerText;
+  currentScenarioButton.src = new URL(
+    "assets/start.svg",
+    window.location.href
+  ).href;
 
-  const startSrc = new URL("assets/start.svg", window.location.href).href;
-  currentScenarioButton.src = startSrc;
-
-  Array.from(bindHolder.children).forEach((child) => {
-    if (child.id !== "add-bind") {
-      child.remove();
-    }
+  [...bindHolder.children].forEach((child) => {
+    if (child.id !== "add-bind") child.remove();
   });
 
   fetch("http://localhost:3102/", {
@@ -125,34 +118,169 @@ function selectScenario(scenario) {
     .then((res) => res.text())
     .then((response) => {
       response.split("/").forEach((line) => {
-        if (line == null || line == "") return;
-        console.log("line" + line);
-        switch (line.split("&")[0]) {
-          case "0":
-            AddStringMap(line);
-            break;
-          case "1":
-            AddKeyMap(line);
-            break;
-          default:
-            return;
-        }
+        if (!line) return;
+        const type = line.split("&")[1];
+        if (type === "1") AddStringMap(line);
+        else if (type === "0") AddKeyMap(line);
       });
     });
 }
 
 function AddKeyMap(line) {
-  let map = document.createElement("div");
+  const map = document.createElement("div");
   map.classList.add("bind");
   bindHolder.appendChild(map);
 
-  map.innerText = line + " key";
+  const [id, type, fromKeyCodeStr] = line.split("&");
+  let fromKeyCode = parseInt(fromKeyCodeStr);
+  let toKeys = (line.split(">")[1] || "")
+    .split(";")
+    .filter((k) => k)
+    .map(Number);
+
+  const fromKeyBtn = document.createElement("button");
+  fromKeyBtn.classList.add("listen-key");
+  fromKeyBtn.innerText = String.fromCharCode(fromKeyCode);
+  map.appendChild(fromKeyBtn);
+
+  let waiting = false;
+  fromKeyBtn.addEventListener("click", () => {
+    fromKeyBtn.innerText = "Press a key...";
+    waiting = true;
+  });
+
+  const keyListener = (e) => {
+    if (!waiting) return;
+    waiting = false;
+    fromKeyCode = e.key.toUpperCase().charCodeAt(0);
+    fromKeyBtn.innerText = e.key.toUpperCase();
+    sendUpdate();
+  };
+  window.addEventListener("keydown", keyListener);
+
+  const toKeyContainer = document.createElement("div");
+  toKeyContainer.classList.add("to-keys");
+  map.appendChild(toKeyContainer);
+
+  function renderToKeys() {
+    toKeyContainer.innerHTML = "";
+    toKeys.forEach((code, i) => {
+      const keyBtn = document.createElement("button");
+      keyBtn.innerText = String.fromCharCode(code);
+      keyBtn.addEventListener("click", () => {
+        toKeys.splice(i, 1);
+        sendUpdate();
+        renderToKeys();
+      });
+      toKeyContainer.appendChild(keyBtn);
+    });
+
+    const addBtn = document.createElement("button");
+    addBtn.innerText = "+";
+    addBtn.addEventListener("click", () => {
+      addBtn.innerText = "Press key...";
+      const handler = (e) => {
+        const newCode = e.key.toUpperCase().charCodeAt(0);
+        toKeys.push(newCode);
+        sendUpdate();
+        renderToKeys();
+        addBtn.innerText = "+";
+        window.removeEventListener("keydown", handler);
+      };
+      window.addEventListener("keydown", handler);
+    });
+    toKeyContainer.appendChild(addBtn);
+  }
+
+  function sendUpdate() {
+    fetch("http://localhost:3102/", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: `change_bind@${
+        currentScenarioName.innerText
+      }@${id}&${type}&${fromKeyCode}>${toKeys.join(";")}`,
+    });
+  }
+
+  renderToKeys();
 }
 
 function AddStringMap(line) {
-  let map = document.createElement("div");
+  const map = document.createElement("div");
   map.classList.add("bind");
   bindHolder.appendChild(map);
 
-  map.innerText = line + " str";
+  const [id, type, fromKeyCodeStr] = line.split("&");
+  let fromKeyCode = parseInt(fromKeyCodeStr);
+  let toString = line.split(">")[1] || "";
+
+  const fromKeyBtn = document.createElement("button");
+  fromKeyBtn.classList.add("listen-key");
+  fromKeyBtn.innerText = String.fromCharCode(fromKeyCode);
+  map.appendChild(fromKeyBtn);
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = toString;
+  input.classList.add("edit-to-value");
+  input.value = toString;
+  map.appendChild(input);
+
+  input.addEventListener("change", () => {
+    sendUpdate(input.value, fromKeyCode);
+  });
+
+  let waiting = false;
+  fromKeyBtn.addEventListener("click", () => {
+    fromKeyBtn.innerText = "Press a key...";
+    waiting = true;
+  });
+
+  const keyListener = (e) => {
+    if (!waiting) return;
+    waiting = false;
+    fromKeyCode = e.key.toUpperCase().charCodeAt(0);
+    fromKeyBtn.innerText = e.key.toUpperCase();
+    sendUpdate(input.value, fromKeyCode);
+  };
+  window.addEventListener("keydown", keyListener);
+
+  function sendUpdate(val, key) {
+    fetch("http://localhost:3102/", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: `change_bind@${currentScenarioName.innerText}@${id}&${type}&${key}>${val}`,
+    });
+  }
+}
+
+function AddBind(button) {
+  const type = document.getElementById("bind-type-selector").value;
+  const originalText = button.innerText;
+  button.innerText = "Press a key...";
+
+  function onKeyPress(e) {
+    window.removeEventListener("keydown", onKeyPress);
+    const fromKeyCode = e.keyCode;
+    const id = bindHolder.children.length - 1;
+    const toKeys = "";
+    const toString = "placeholder";
+    button.innerText = originalText;
+
+    const payload =
+      type === "0"
+        ? `change_bind@${currentScenarioName.innerText}@${id}&${type}&${fromKeyCode}>${toKeys}`
+        : `change_bind@${currentScenarioName.innerText}@${id}&${type}&${fromKeyCode}>${toString}`;
+
+    fetch("http://localhost:3102/", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: payload,
+    }).then(() => {
+      if (type === "0") AddKeyMap(`${id}&${type}&${fromKeyCode}>${toKeys}`);
+      else AddStringMap(`${id}&${type}&${fromKeyCode}>${toString}`);
+    });
+  }
+
+  window.addEventListener("keydown", onKeyPress);
 }
