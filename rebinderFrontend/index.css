@@ -19,7 +19,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: rgba(0, 0, 0, 0); /* semi-transparent */
+  background-color: rgba(0, 0, 0, 0);
   overflow: hidden;
   border-radius: var(--window_border_radious);
 
@@ -41,6 +41,47 @@ body {
   background-color: var(--secondary);
   border-radius: var(--window_border_radious);
   border: var(--contrast) solid 5px;
+
+  .warning {
+    color: red;
+    visibility: hidden;
+  }
+}
+
+#add-scenario-popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--contrast);
+
+  .add-scenario-row {
+    display: flex;
+    flex-direction: row;
+    font-size: 25px;
+
+    * {
+      margin: 5px;
+    }
+    input {
+      background-color: var(--secondary);
+      border: 3px solid var(--background);
+      font-size: 25px;
+      border-radius: 5px;
+      height: 30px;
+      width: 40%;
+    }
+  }
+  #add-scenario-done {
+    width: fit-content;
+    margin-top: 20px;
+
+    img {
+      width: 40px;
+      aspect-ratio: 1;
+    }
+  }
 }
 
 #app {

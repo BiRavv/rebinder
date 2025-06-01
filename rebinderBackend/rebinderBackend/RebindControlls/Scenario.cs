@@ -6,9 +6,11 @@ namespace rebinderBackend.RebindControls
 {
     public class Scenario
     {
-        private readonly List<IBind> _binds = new List<IBind>();
+        private readonly List<IBind> _binds = [];
         public bool IsActive { get; private set; } = false;
         public string Name { get; private set; } = string.Empty;
+        
+        public static List<Scenario> AllScenarios = new List<Scenario>();
 
         
         // This is very important, so names don't clash.
@@ -19,7 +21,7 @@ namespace rebinderBackend.RebindControls
             while (Names.Contains(ogName))
             {
                 overflow++;
-                ogName = ogName+"_copy";
+                ogName += " copy";
                 if (overflow > 100) throw new Exception("Scenario name overflow");
             }
             Names.Add(ogName);
@@ -58,8 +60,12 @@ namespace rebinderBackend.RebindControls
         public Scenario(string name)
         {
             Name = ValidateName(name);
-            Fetch.Listen("scenario", Name, () =>
+            AllScenarios.Add(this);
+            Console.WriteLine("New scenario: " + Name);
+            Fetch.AddListener(body =>
             {
+                if (body != $"scenario@{Name}") return null;
+                
                 IsActive = !IsActive;
                 foreach (IBind bind in _binds)
                 {
@@ -67,7 +73,7 @@ namespace rebinderBackend.RebindControls
                     else bind.Stop();
                 }
                 
-                return 0; // Returns any
+                return null; // Returns any
             });
         }
     }

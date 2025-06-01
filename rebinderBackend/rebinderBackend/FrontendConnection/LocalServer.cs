@@ -19,7 +19,7 @@ namespace rebinderBackend.FrontendConnection
             getListener().Prefixes.Add("http://localhost:3102/");
             getListener().Start();
 
-            Console.WriteLine("C# Server Running on http://localhost:3102/");
+            Console.WriteLine("Server Running on http://localhost:3102/");
         }
     }
 }
