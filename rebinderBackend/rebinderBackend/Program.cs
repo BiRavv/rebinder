@@ -23,8 +23,11 @@ namespace rebinderBackend
             Scenario sc = new Scenario("one");
             sc.AddBind(new StringMap(Keys.A, "test string 😎 "));
             sc.AddBind(new KeyMap(Keys.B, [Keys.LWin, Keys.D]));
-            //sc.SetActive(true);
-
+            
+            Scenario sc2 = new Scenario("two");
+            sc2.AddBind(new StringMap(Keys.A, "second test 🕶"));
+            sc2.AddBind(new KeyMap(Keys.B, [Keys.Q, Keys.S, Keys.D]));
+            
             
             Application.Run();
         }
@@ -39,6 +42,18 @@ namespace rebinderBackend
                 
                 Scenario scenario = new Scenario(body.Split(new [] {'@'},3)[1]);
                 return "add_scenario@"+scenario.Name;
+            });
+            // Listen for all scenarios request
+            Fetch.AddListener(body =>
+            {
+                if (!body.StartsWith("all_scenario@")) return null;
+                
+                string allsc = "";
+                foreach (Scenario sc in Scenario.AllScenarios)
+                {
+                    allsc +=";"+sc.Name ;
+                }
+                return allsc;
             });
         }
         private static void CaptureMain()

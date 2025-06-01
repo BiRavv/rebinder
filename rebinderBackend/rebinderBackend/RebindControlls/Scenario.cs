@@ -62,6 +62,8 @@ namespace rebinderBackend.RebindControls
             Name = ValidateName(name);
             AllScenarios.Add(this);
             Console.WriteLine("New scenario: " + Name);
+            
+            // Toggle switch for active
             Fetch.AddListener(body =>
             {
                 if (body != $"scenario@{Name}") return null;
@@ -71,6 +73,19 @@ namespace rebinderBackend.RebindControls
                 {
                     if (IsActive) bind.Start();
                     else bind.Stop();
+                }
+                
+                return null; // Returns any
+            });
+            // Stops scenario
+            Fetch.AddListener(body =>
+            {
+                if (body != $"stop_scenario@{Name}") return null;
+                
+                IsActive = false;
+                foreach (IBind bind in _binds)
+                {
+                    bind.Stop();
                 }
                 
                 return null; // Returns any

@@ -5,6 +5,32 @@ const scenarioPopup = document.getElementById("add-scenario-popup");
 const currentScenarioName = document.getElementById("current-scenario-name");
 const currentScenarioButton = document.getElementById("current-scenario-btn");
 
+let startingScenarios = [];
+function getAllScenarios() {
+  fetch("http://localhost:3102/", {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: `all_scenario@any`,
+  })
+    .then((res) => res.text())
+    .then((response) => {
+      console.log(response);
+      response.split(";").forEach((name) => {
+        if (name == "" || name == null) return;
+
+        let sc = document.createElement("div");
+        sc.classList.add("scenario");
+        sc.innerText = name;
+        sc.addEventListener("click", () => selectScenario(sc));
+        scenarioHolder.appendChild(sc);
+
+        if (scenarioHolder.firstChild != null) {
+          scenarioHolder.firstChild.classList.add("selected");
+        }
+      });
+    });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("add-scenario")
@@ -15,6 +41,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("current-scenario-btn")
     .addEventListener("click", StartCurrentScenario);
+  getAllScenarios();
 });
 
 function AddScenario() {
@@ -59,19 +86,28 @@ function AddScenarioDone() {
       let sc = document.createElement("div");
       sc.classList.add("scenario");
       sc.innerText = finalName;
+      sc.addEventListener("click", () => selectScenario(sc));
       scenarioHolder.appendChild(sc);
+
       scenarioPopup.style.visibility = "collapse";
       newScenarioWarning.style.visibility = "hidden";
       newScenarioName.value = "";
-
-      sc.addEventListener("click", () => selectScenario(sc));
     });
 }
 
 function selectScenario(scenario) {
+  fetch("http://localhost:3102/", {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: `stop_scenario@${currentScenarioName.innerText}`,
+  });
+
   for (let i = 0; i < scenarioHolder.children.length; i++) {
     scenarioHolder.children[i].classList.remove("selected");
   }
   scenario.classList.add("selected");
   currentScenarioName.innerText = scenario.innerText;
+
+  const startSrc = new URL("assets/start.svg", window.location.href).href;
+  currentScenarioButton.src = startSrc;
 }
