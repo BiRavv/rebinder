@@ -127,11 +127,11 @@ function selectScenario(scenario) {
       response.split("/").forEach((line) => {
         if (line == null || line == "") return;
         console.log("line" + line);
-        switch (line.split("&")[0]) {
-          case "0":
+        switch (line.split("&")[1]) {
+          case "1":
             AddStringMap(line);
             break;
-          case "1":
+          case "0":
             AddKeyMap(line);
             break;
           default:
@@ -140,13 +140,43 @@ function selectScenario(scenario) {
       });
     });
 }
-
 function AddKeyMap(line) {
   let map = document.createElement("div");
   map.classList.add("bind");
   bindHolder.appendChild(map);
 
-  map.innerText = line + " key";
+  let mainParts = line.split("&");
+  const id = mainParts[0];
+  const type = mainParts[1];
+  const fromKeyCode = parseInt(mainParts[2]);
+  // The part after > contains multiple keys separated by ;
+  const toKeys = line.split(">")[1] || "";
+
+  // Create button to display current fromKey
+  const fromKeyBtn = document.createElement("button");
+  fromKeyBtn.classList.add("listen-key");
+  fromKeyBtn.innerText = String.fromCharCode(fromKeyCode);
+  map.appendChild(fromKeyBtn);
+
+  let waiting = false;
+  fromKeyBtn.addEventListener("click", () => {
+    fromKeyBtn.innerText = "Press a key...";
+    waiting = true;
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (!waiting) return;
+    waiting = false;
+    const newKeyCode = e.key.toUpperCase().charCodeAt(0);
+    fromKeyBtn.innerText = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+
+    // Send updated key bind (id&type&newFromKeyCode>toKeys)
+    fetch("http://localhost:3102/", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: `change_bind@${currentScenarioName.innerText}@${id}&${type}&${newKeyCode}>${toKeys}`,
+    });
+  });
 }
 
 function AddStringMap(line) {
@@ -154,5 +184,54 @@ function AddStringMap(line) {
   map.classList.add("bind");
   bindHolder.appendChild(map);
 
-  map.innerText = line + " str";
+  let mainParts = line.split("&");
+  const id = mainParts[0];
+  const type = mainParts[1];
+  const fromKeyCode = parseInt(mainParts[2]);
+  const toString = line.split(">")[1] || "";
+
+  // Show fromKey as char (not editable)
+  const fromKeyBtn = document.createElement("button");
+  fromKeyBtn.classList.add("listen-key");
+  fromKeyBtn.innerText = String.fromCharCode(fromKeyCode);
+  map.appendChild(fromKeyBtn);
+
+  // Text input to edit bound string
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = toString;
+  input.classList.add("edit-to-value");
+  map.appendChild(input);
+
+  // When input changes, send update with new string
+  input.addEventListener("change", () => {
+    const newToString = input.value;
+    fetch("http://localhost:3102/", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: `change_bind@${currentScenarioName.innerText}@${id}&${type}&${fromKeyCode}>${newToString}`,
+    });
+  });
+
+  // Allow changing the fromKey by clicking the button (optional)
+  let waiting = false;
+  fromKeyBtn.addEventListener("click", () => {
+    fromKeyBtn.innerText = "Press a key...";
+    waiting = true;
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (!waiting) return;
+    waiting = false;
+    const newKeyCode = e.key.toUpperCase().charCodeAt(0);
+    fromKeyBtn.innerText = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+
+    fetch("http://localhost:3102/", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: `change_bind@${
+        currentScenarioName.innerText
+      }@${id}&${type}&${newKeyCode}>${input.value || toString}`,
+    });
+  });
 }

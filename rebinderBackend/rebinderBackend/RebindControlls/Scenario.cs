@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 using rebinderBackend.FrontendConnection;
 
 namespace rebinderBackend.RebindControls
@@ -104,6 +106,36 @@ namespace rebinderBackend.RebindControls
                 }
                 
                 return responseBinds;
+            });
+            
+            Fetch.AddListener(body =>
+            {
+                if (!body.StartsWith($"change_bind@{Name}")) return null;
+
+                string toChange = body.Split(new[] { '@' })[2];
+
+                IBind bind = _binds[Int32.Parse(toChange.Split('&')[0])];
+
+
+                if (toChange.Split('&')[1] == "1")
+                {
+                    StringMap stringMap = (StringMap)bind;
+                    stringMap.fromKey = (Keys)Int64.Parse(toChange.Split('&')[2].Split('>')[0]);
+                    stringMap.textToPaste = toChange.Split('&')[2].Split('>')[1];
+                }
+                else if (toChange.Split('&')[1] == "0")
+                {
+                    KeyMap stringMap = (KeyMap)bind;
+                    stringMap.fromKey = (Keys)Int64.Parse(toChange.Split('&')[2].Split('>')[0]);
+                    stringMap.toKeys = new Keys[] { };
+                    foreach (string keyString in toChange.Split('&')[2].Split('>')[1].Split(';'))
+                    {
+                        if (keyString == "" || keyString == null) continue;
+                        stringMap.toKeys.Append((Keys)Int64.Parse(keyString));
+                    }
+                }
+
+                return null;
             });
         }
     }

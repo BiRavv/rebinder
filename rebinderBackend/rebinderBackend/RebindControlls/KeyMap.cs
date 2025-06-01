@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -7,8 +8,8 @@ using rebinderBackend.RebindControls;
 
 public class KeyMap : IBind
 {
-    private readonly Keys fromKey;
-    private readonly Keys[] toKeys;
+    public Keys fromKey;
+    public Keys[] toKeys;
     private IntPtr hookId = IntPtr.Zero;
     private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
     private LowLevelKeyboardProc proc;
@@ -38,7 +39,12 @@ public class KeyMap : IBind
 
     public string ToFrontendData()
     {
-        return "0&"+ (int)fromKey +">"+String.Join(";", toKeys);
+        List<int> toKeysCode = new List<int>();
+        foreach (Keys key in toKeys)
+        {
+            toKeysCode.Add((int)key);
+        }
+        return "0&"+ (int)fromKey +">"+String.Join(";", toKeysCode);
     }
     
     private IntPtr SetHook(LowLevelKeyboardProc proc)
