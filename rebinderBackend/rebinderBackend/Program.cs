@@ -41,7 +41,6 @@ namespace rebinderBackend
                 return "add_scenario@"+scenario.Name;
             });
         }
-        
         private static void CaptureMain()
         {
             Application.EnableVisualStyles();
